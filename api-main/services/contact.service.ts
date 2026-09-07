@@ -1,0 +1,1 @@
+import {z} from "zod"; export const contactUpdateSchema=z.object({name:z.string().trim().min(1),phone:z.string().trim().regex(/^\+?[0-9 ()-]{7,20}$/),email:z.string().email().optional().or(z.literal(""))});

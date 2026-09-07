@@ -1,0 +1,1 @@
+import {NextResponse} from "next/server"; import {getEmbeddedSignupConfig} from "@/services/meta.service"; export async function GET(){const config=getEmbeddedSignupConfig();if(!config.configured)return NextResponse.json(config,{status:503});return NextResponse.json(config)}

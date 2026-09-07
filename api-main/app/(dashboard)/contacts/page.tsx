@@ -1,0 +1,1 @@
+import {PageHeader} from "@/components/ui"; import {ContactTable} from "@/components/contacts/ContactTable"; export default function Contacts(){return <div className="p-6 md:p-10"><PageHeader title="Contacts" description="Manage the people your workspace communicates with."/><ContactTable/></div>}

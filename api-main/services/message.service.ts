@@ -1,0 +1,1 @@
+export type MessageInput={conversationId:string;body:string}; export function prepareLocalMessage(input:MessageInput){return {...input,direction:"OUTBOUND" as const,senderType:"AGENT" as const,type:"TEXT" as const,timestamp:new Date()};}

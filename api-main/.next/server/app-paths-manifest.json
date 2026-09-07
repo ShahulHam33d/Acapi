@@ -1,0 +1,8 @@
+{
+  "/api/contacts/route": "app/api/contacts/route.js",
+  "/api/conversations/route": "app/api/conversations/route.js",
+  "/(dashboard)/contacts/page": "app/(dashboard)/contacts/page.js",
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/(dashboard)/[module]/page": "app/(dashboard)/[module]/page.js",
+  "/(dashboard)/chats/page": "app/(dashboard)/chats/page.js"
+}

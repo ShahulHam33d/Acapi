@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ConnectionStatus {
+  NOT_CONNECTED
+  CONNECTING
+  CONNECTED
+  ERROR
+}
+
+enum ConversationStatus {
+  REQUESTING
+  ACTIVE
+  CLOSED
+}
+
+enum SenderType {
+  CUSTOMER
+  AGENT
+  SYSTEM
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  DOCUMENT
+  AUDIO
+  TEMPLATE
+}
+
+model User {
+  id                     String            @id @default(cuid())
+  name                   String
+  email                  String            @unique
+  passwordHash           String?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  workspaces             WorkspaceMember[]
+  assignedConversations  Conversation[]    @relation("AssignedConversations")
+  intervenedConversations Conversation[]   @relation("IntervenedConversations")
+}
+
+model Workspace {
+  id            String              @id @default(cuid())
+  name          String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  members       WorkspaceMember[]
+  connections   WhatsAppConnection[]
+  contacts      Contact[]
+  conversations Conversation[]
+}
+
+model WorkspaceMember {
+  userId      String
+  workspaceId String
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, workspaceId])
+}
+
+model WhatsAppConnection {
+  id                 String           @id @default(cuid())
+  workspaceId        String
+  businessAccountId  String?
+  phoneNumberId      String?
+  displayPhoneNumber String?
+  businessName       String?
+  status             ConnectionStatus @default(NOT_CONNECTED)
+  connectedAt        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model Contact {
+  id             String         @id @default(cuid())
+  workspaceId    String
+  name           String
+  phone          String
+  email          String?
+  profilePicture String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+
+  @@unique([workspaceId, phone])
+}
+
+model Conversation {
+  id                  String             @id @default(cuid())
+  workspaceId         String
+  contactId           String
+  status              ConversationStatus @default(REQUESTING)
+  assignedUserId      String?
+  intervenedByUserId  String?
+  intervenedAt        DateTime?
+  lastMessageAt       DateTime?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contact          Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  assignedUser     User?     @relation("AssignedConversations", fields: [assignedUserId], references: [id])
+  intervenedByUser User?     @relation("IntervenedConversations", fields: [intervenedByUserId], references: [id])
+  messages         Message[]
+}
+
+model Message {
+  id                String           @id @default(cuid())
+  conversationId    String
+  senderType        SenderType
+  direction         MessageDirection
+  type              MessageType      @default(TEXT)
+  body              String
+  whatsappMessageId String?
+  timestamp         DateTime         @default(now())
+  createdAt         DateTime         @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}

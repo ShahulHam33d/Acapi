@@ -1,0 +1,1 @@
+import {PageHeader} from "@/components/ui"; import {ChatInbox} from "@/components/chats/ChatInbox"; export default function Chats(){return <div className="p-6 md:p-10"><PageHeader title="Chats" description="A shared inbox for focused, human customer conversations."/><ChatInbox/></div>}
