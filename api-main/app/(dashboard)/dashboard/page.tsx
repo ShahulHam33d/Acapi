@@ -152,14 +152,48 @@ export default function Dashboard() {
     setNotice("Opening Meta Embedded Signup...");
 
     window.FB.login(
-      (response) => {
-        if (response.authResponse?.code) {
-          console.log("Authorization code received:", response.authResponse.code);
+      async (response) => {
+        console.log("Meta login response:", response);
+
+        const code = response.authResponse?.code;
+
+        if (!code) {
+          setNotice("WhatsApp onboarding was cancelled or no code was returned.");
+          return;
+        }
+
+        console.log("Authorization code received:", code);
+
+        setNotice("Connecting WhatsApp to Alpha Connect...");
+
+        try {
+          const result = await fetch("/api/whatsapp/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+          });
+
+          const data = await result.json();
+
+          console.log("Backend signup response:", data);
+
+          if (!result.ok) {
+            throw new Error(
+              data.error || "WhatsApp connection failed."
+            );
+          }
+
+          setNotice("WhatsApp authorization successful!");
+        } catch (error) {
+          console.error("Backend exchange error:", error);
+
           setNotice(
-            "Authorization code received. Backend exchange is the next step."
+            error instanceof Error
+              ? error.message
+              : "WhatsApp connection failed."
           );
-        } else {
-          setNotice("WhatsApp onboarding was cancelled.");
         }
       },
       {
