@@ -44,20 +44,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // This must exactly match the redirect URI configured
-    // in Meta Developer Dashboard.
-    const redirectUri = "https://acapi-seven.vercel.app/";
-
+    // Embedded Signup codes (config_id + override_default_response_type)
+    // are NOT bound to a redirect URI — do not send one here.
     const tokenUrl =
       `https://graph.facebook.com/${apiVersion}/oauth/access_token` +
       `?client_id=${encodeURIComponent(appId)}` +
       `&client_secret=${encodeURIComponent(appSecret)}` +
-      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
       `&code=${encodeURIComponent(code)}`;
 
     console.log("Exchanging Meta authorization code...");
     console.log("Meta API version:", apiVersion);
-    console.log("Meta redirect URI:", redirectUri);
 
     const tokenResponse = await fetch(tokenUrl, {
       method: "GET",
