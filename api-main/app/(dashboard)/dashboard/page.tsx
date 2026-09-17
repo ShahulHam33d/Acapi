@@ -29,6 +29,7 @@ declare global {
           config_id: string;
           response_type: string;
           override_default_response_type: boolean;
+          redirect_uri:string;
           extras: {
             setup: Record<string, unknown>;
           };
@@ -346,6 +347,7 @@ export default function Dashboard() {
           config_id: configId,
           response_type: "code",
           override_default_response_type: true,
+          redirect_uri: "https://acapi-seven.vercel.app/",
           extras: {
             setup: {},
           },
