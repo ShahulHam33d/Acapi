@@ -18,13 +18,17 @@ export async function POST(request: Request) {
 
     if (!code || typeof code !== "string") {
       return NextResponse.json(
-        { success: false, error: "Authorization code is required." },
+        {
+          success: false,
+          error: "Authorization code is required.",
+        },
         { status: 400 }
       );
     }
 
     const appId = process.env.META_APP_ID;
     const appSecret = process.env.META_APP_SECRET;
+
     const apiVersion =
       process.env.META_GRAPH_API_VERSION ||
       process.env.NEXT_PUBLIC_META_GRAPH_API_VERSION ||
@@ -40,11 +44,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // This must exactly match the redirect URI configured
+    // in Meta Developer Dashboard.
+    const redirectUri = "https://acapi-seven.vercel.app/";
+
     const tokenUrl =
       `https://graph.facebook.com/${apiVersion}/oauth/access_token` +
       `?client_id=${encodeURIComponent(appId)}` +
       `&client_secret=${encodeURIComponent(appSecret)}` +
+      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
       `&code=${encodeURIComponent(code)}`;
+
+    console.log("Exchanging Meta authorization code...");
+    console.log("Meta API version:", apiVersion);
+    console.log("Meta redirect URI:", redirectUri);
 
     const tokenResponse = await fetch(tokenUrl, {
       method: "GET",
