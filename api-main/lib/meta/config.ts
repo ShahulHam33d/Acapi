@@ -1,1 +1,3 @@
-export const metaConfig={appId:process.env.NEXT_PUBLIC_META_APP_ID,configId:process.env.NEXT_PUBLIC_META_CONFIG_ID,graphApiVersion:process.env.META_GRAPH_API_VERSION??"v23.0"}; export function isMetaConfigured(){return Boolean(metaConfig.appId&&metaConfig.configId)}
+export const metaConfig={appId:process.env.NEXT_PUBLIC_META_APP_ID,configId:process.env.NEXT_PUBLIC_META_CONFIG_ID,graphApiVersion:process.env.META_GRAPH_API_VERSION??"v23.0"}; 
+export function isMetaConfigured(){
+    return Boolean(metaConfig.appId&&metaConfig.configId)}
