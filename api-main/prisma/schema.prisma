@@ -39,6 +39,12 @@ enum MessageType {
   TEMPLATE
 }
 
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  AGENT
+}
+
 model User {
   id                     String            @id @default(cuid())
   name                   String
@@ -47,6 +53,7 @@ model User {
   createdAt              DateTime          @default(now())
   updatedAt              DateTime          @updatedAt
   workspaces             WorkspaceMember[]
+  sessions               Session[]
   assignedConversations  Conversation[]    @relation("AssignedConversations")
   intervenedConversations Conversation[]   @relation("IntervenedConversations")
 }
@@ -65,11 +72,24 @@ model Workspace {
 model WorkspaceMember {
   userId      String
   workspaceId String
+  role        WorkspaceRole @default(AGENT)
 
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@id([userId, workspaceId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model WhatsAppConnection {

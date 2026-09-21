@@ -1,0 +1,100 @@
+api-main/
+│
+├── .next/
+│
+├── app/
+│   │
+│   ├── (auth)/
+│   │   ├── login/
+│   │   │   ├── page.tsx
+│   │   │   └── route.ts
+│   │   │
+│   │   ├── logout/
+│   │   │   └── route.ts
+│   │   │
+│   │   ├── me/
+│   │   │   └── route.ts
+│   │   │
+│   │   ├── signup/
+│   │   │   ├── page.tsx
+│   │   │   └── route.ts
+│   │   │
+│   │   └── layout.tsx
+│   │
+│   ├── (dashboard)/
+│   │   ├── [module]/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── chats/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── contacts/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── dashboard/
+│   │   │
+│   │   └── layout.tsx
+│   │
+│   ├── api/
+│   │   ├── auth/
+│   │   │
+│   │   ├── contacts/
+│   │   │
+│   │   ├── conversations/
+│   │   │
+│   │   ├── webhooks/
+│   │   │
+│   │   └── whatsapp/
+│   │       └── signup/
+│   │           └── route.ts
+│   │
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── components/
+│   │
+│   ├── chats/
+│   │   └── ChatInbox.tsx
+│   │
+│   ├── contacts/
+│   │   └── ContactTable.tsx
+│   │
+│   ├── layout/
+│   │   └── AppShell.tsx
+│   │
+│   └── ui.tsx
+│
+├── docs/
+│   └── CURRENT_STATE.md
+│
+├── lib/
+│   │
+│   ├── auth/
+│   │   ├─── dev-session.ts
+│   │   └─── password.ts
+│   │
+│   ├── meta/
+│   │   └── config.ts
+│   │
+│   └── prisma.ts
+│
+├── prisma/
+│   │
+│   ├── migrations/
+│   │
+│   ├── schema.prisma
+│   └── seed.ts
+│
+├── services/
+│   ├── contact.service.ts
+│   ├── conversation.service.ts
+│   ├── message.service.ts
+│   ├── meta.service.ts
+│   └── whatsapp.service.ts
+│
+├── node_modules/
+│
+├── .env
+├── .env.example
+└── .gitignore

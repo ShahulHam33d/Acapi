@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-import {
-  SESSION_COOKIE,
-} from "@/lib/auth/dev-session";
+import { prisma } from "@/lib/prisma";
+import { SESSION_COOKIE } from "@/lib/auth/dev-session";
 
 export async function POST() {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
 
   if (sessionId) {
-    const { prisma } = await import("@/lib/prisma");
-
     await prisma.session.deleteMany({
       where: {
         id: sessionId,
