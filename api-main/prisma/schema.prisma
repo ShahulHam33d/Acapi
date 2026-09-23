@@ -46,6 +46,13 @@ enum WorkspaceRole {
   AGENT
 }
 
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
 model User {
   id                     String            @id @default(cuid())
   name                   String
@@ -57,6 +64,7 @@ model User {
   sessions               Session[]
   assignedConversations  Conversation[]    @relation("AssignedConversations")
   intervenedConversations Conversation[]   @relation("IntervenedConversations")
+  sentInvites WorkspaceInvite[]
 }
 
 model Workspace {
@@ -68,6 +76,7 @@ model Workspace {
   connections   WhatsAppConnection[]
   contacts      Contact[]
   conversations Conversation[]
+  invites WorkspaceInvite[]
 }
 
 model WorkspaceMember {
@@ -77,8 +86,26 @@ model WorkspaceMember {
 
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-
+  
   @@id([userId, workspaceId])
+}
+
+model WorkspaceInvite {
+  id          String       @id @default(cuid())
+  workspaceId String
+  email       String
+  role        WorkspaceRole @default(AGENT)
+  token       String       @unique
+  status      InviteStatus @default(PENDING)
+  invitedById String
+  expiresAt   DateTime
+  createdAt   DateTime     @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invitedBy User      @relation(fields: [invitedById], references: [id])
+
+  @@index([email])
+  @@index([workspaceId])
 }
 
 model Session {
